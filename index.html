@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div data-theme="1" id="app" class="app">
+      <div class="calculator-container full-size">
+        <div class="calculator-header">
+          <h1 class="calculator-name text-color">calc</h1>
+
+          <div class="calculator-toggle-container">
+            <h3 class="theme-text text-color">THEME</h3>
+
+            <div class="calculator-toggle full-size">
+              <div class="calculator-toggle-themes">
+                <button class="theme-button text-color">1</button>
+                <button class="theme-button text-color">2</button>
+                <button class="theme-button text-color">3</button>
+              </div>
+
+              <button class="toggle-button"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calculator-body">
+          <div class="calculator-screen">
+            <input type="number" class="text-color full-size" />
+          </div>
+
+          <div class="calculator-keypad full-size">
+            <button data-key="7" class="keypad-button keypad-button-equal">
+              7
+            </button>
+
+            <button data-key="8" class="keypad-button keypad-button-equal">
+              8
+            </button>
+
+            <button data-key="9" class="keypad-button keypad-button-equal">
+              9
+            </button>
+
+            <button data-key="del" class="keypad-button keypad-button-normal">
+              del
+            </button>
+
+            <button data-key="4" class="keypad-button keypad-button-equal">
+              4
+            </button>
+
+            <button data-key="5" class="keypad-button keypad-button-equal">
+              5
+            </button>
+
+            <button data-key="6" class="keypad-button keypad-button-equal">
+              6
+            </button>
+
+            <button data-key="plus" class="keypad-button keypad-button-equal">
+              +
+            </button>
+
+            <button data-key="1" class="keypad-button keypad-button-equal">
+              1
+            </button>
+
+            <button data-key="2" class="keypad-button keypad-button-equal">
+              2
+            </button>
+
+            <button data-key="3" class="keypad-button keypad-button-equal">
+              3
+            </button>
+
+            <button data-key="minus" class="keypad-button keypad-button-equal">
+              -
+            </button>
+
+            <button data-key="dot" class="keypad-button keypad-button-equal">
+              .
+            </button>
+
+            <button data-key="0" class="keypad-button keypad-button-equal">
+              0
+            </button>
+
+            <button data-key="divide" class="keypad-button keypad-button-equal">
+              /
+            </button>
+
+            <button
+              data-key="multiply"
+              class="keypad-button keypad-button-equal"
+            >
+              x
+            </button>
+
+            <button
+              data-key="reset"
+              class="keypad-button keypad-button-large keypad-button-normal"
+            >
+              reset
+            </button>
+
+            <button
+              data-key="equal"
+              class="keypad-button keypad-button-large keypad-button-helpers"
+            >
+              <span> = </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

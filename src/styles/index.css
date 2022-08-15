@@ -1,0 +1,15 @@
+@import url("./base/reset-min.css");
+@import url("./base/fonts.css");
+@import url("./base/variables.css");
+@import url("./calculator/calculator.css");
+
+.app {
+  background-color: var(--main-bg);
+  font-family: var(--ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+}

@@ -1,0 +1,184 @@
+.full-size {
+  width: 100%;
+  height: 100%;
+}
+
+.calculator-container {
+  max-height: 740px;
+  max-width: 540px;
+}
+
+.calculator-container,
+.calculator-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.calculator-header,
+.calculator-toggle-container,
+.calculator-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.calculator-header {
+  justify-content: space-between;
+}
+
+.calculator-name {
+  font-size: 28px;
+}
+
+.theme-text {
+  margin-right: 12px;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.calculator-toggle {
+  background-color: var(--toggle-bg);
+  border-radius: 12px;
+  height: 26px;
+  position: relative;
+  width: 76px;
+}
+
+.calculator-toggle-themes {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  padding: 0 8px;
+  position: absolute;
+  top: -100%;
+  width: 100%;
+}
+
+.theme-button {
+  padding: 0;
+  font-family: var(--ff);
+}
+
+.toggle-button {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  background-color: var(--key-bg-2);
+}
+
+.calculator-screen {
+  height: 102px;
+  border-radius: var(--box-radius);
+  overflow: hidden;
+  background-color: var(--screen-bg);
+  margin: 24px 0;
+  flex-shrink: 0;
+}
+
+.calculator-screen input {
+  background-color: transparent;
+  font-family: var(--ff);
+  font-size: 36px;
+  padding: 40px 30px;
+  text-align: right;
+}
+
+.calculator-screen input::-webkit-outer-spin-button,
+.calculator-screen input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.calculator-screen input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.calculator-keypad {
+  background-color: var(--toggle-bg);
+  border-radius: var(--box-radius);
+  display: grid;
+  flex-shrink: 0;
+  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(auto-fill, 60px);
+  padding: 24px 24px 0;
+}
+
+.keypad-button {
+  border-radius: var(--box-radius);
+  font-family: var(--ff);
+  line-height: 1;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.keypad-button:active {
+  transform: scale(0.98);
+}
+
+.keypad-button-large {
+  grid-column: span 2;
+}
+
+.keypad-button-normal {
+  background-color: var(--key-bg-1);
+  box-shadow: 1px 3px 0 var(--key-shadow-1);
+  font-size: 20px;
+  color: var(--text-light);
+}
+
+.keypad-button-helpers {
+  background-color: var(--key-bg-2);
+  box-shadow: 1px 3px 0 var(--key-shadow-2);
+  color: var(--text-light);
+  font-size: 24px;
+}
+
+.keypad-button-equal {
+  background-color: var(--key-bg-3);
+  color: var(--text-color-1);
+  font-size: 32px;
+  box-shadow: 1px 3px 0 var(--key-shadow-3);
+}
+
+/* Theme 1 */
+.app[data-theme="1"] .toggle-button {
+  left: 5px;
+}
+
+.app[data-theme="1"] .text-color {
+  color: var(--text-light);
+}
+
+/* Theme 2 */
+.app[data-theme="2"] .toggle-button {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.app[data-theme="2"] .text-color {
+  color: var(--text-color-1);
+}
+
+/* Theme 3 */
+.app[data-theme="3"] .toggle-button {
+  right: 5px;
+}
+
+.app[data-theme="3"] .text-color {
+  color: var(--text-color-2);
+}
+
+.app[data-theme="3"] .keypad-button {
+  color: var(--text-color-2);
+}
+
+.app[data-theme="3"] .keypad-button-normal {
+  color: var(--text-light);
+}
+
+.app[data-theme="3"] .keypad-button-helpers {
+  color: var(--text-color-1);
+}
