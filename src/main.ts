@@ -1,15 +1,12 @@
-import { ALL_CALCULATOR_KEYS, CALCULATOR_SYMBOLS } from "./js/constants";
+import { ALL_CALCULATOR_KEYS } from "./js/constants";
 import {
   calculate,
   getKeyValue,
-  hasComma,
   hasLeadingZero,
   hasText,
   isInteger,
-  isKeyRole,
   isOperation,
   isMathSymbol,
-  textRegexp,
   shouldPreventNewComma,
 } from "./js/utils";
 import "./styles/index.css";
