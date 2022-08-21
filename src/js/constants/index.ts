@@ -1,29 +1,31 @@
-const CALCULATOR_NUMBERS = {
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-  9: 9,
-  0: 0,
+const NUMBERS = {
+  One: "1",
+  Two: "2",
+  Three: "3",
+  Four: "4",
+  Five: "5",
+  Six: "6",
+  Seven: "7",
+  Eight: "8",
+  Nine: "9",
+  Zero: "0",
 };
 
-const CALCULATOR_SYMBOLS = {
-  "+": "+",
-  "-": "-",
-  "/": "/",
-  "*": "*",
+const SYMBOLS = {
+  Add: "+",
+  Susbtract: "-",
+  Divide: "/",
+  Multiply: "*",
 };
 
-const ALL_CALCULATOR_KEYS = {
-  ...CALCULATOR_NUMBERS,
-  ...CALCULATOR_SYMBOLS,
-  ".": ".",
+const CALCULATOR_KEYS = {
+  ...NUMBERS,
+  ...SYMBOLS,
+  Comma: ".",
   Enter: "Enter",
   Backspace: "Backspace",
 };
 
-export { ALL_CALCULATOR_KEYS, CALCULATOR_NUMBERS, CALCULATOR_SYMBOLS };
+const THEMES = ["1", "2", "3"];
+
+export { CALCULATOR_KEYS, NUMBERS, SYMBOLS, THEMES };

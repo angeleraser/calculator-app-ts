@@ -1,4 +1,4 @@
-import { ALL_CALCULATOR_KEYS } from "./js/constants";
+import { CALCULATOR_KEYS, THEMES } from "./js/constants";
 import {
   calculate,
   getKeyValue,
@@ -7,7 +7,8 @@ import {
   isInteger,
   isOperation,
   isMathSymbol,
-  shouldPreventNewComma,
+  shouldPreventWriting,
+  getLastValueDigit,
 } from "./js/utils";
 import "./styles/index.css";
 
@@ -17,13 +18,6 @@ const toggleBtnEl = document.getElementById(
 const appEl = document.getElementById("app") as HTMLDivElement;
 const formEl = document.getElementById("calculator-form") as HTMLFormElement;
 const inputEl = document.getElementById("calculator-input") as HTMLInputElement;
-
-const lastThemeSaved = localStorage.getItem("CALCULATOR_THEME_KEY");
-const state = {
-  theme: lastThemeSaved ? Number(lastThemeSaved) : 1,
-  themes: { primary: 1, secondary: 2, tertiary: 3 },
-  result: 0,
-};
 
 const updateLastInputDigit = (value: string) => {
   const val = getInputValue();
@@ -38,90 +32,53 @@ const setInputValue = (value: string) => {
   inputEl.value = value;
 };
 
-const getLastInputDigit = () => {
+formEl.addEventListener("submit", (event) => event.preventDefault());
+formEl.addEventListener("keydown", (event) => event.preventDefault());
+
+let isDone = false;
+
+formEl.addEventListener("click", (ev) => {
+  const event = ev as PointerEvent;
+  const keyBtn = event.target as HTMLButtonElement;
+
+  const key = getKeyValue(keyBtn);
   const value = getInputValue();
-  return value[value.length - 1] || "";
-};
+  const lastDigit = getLastValueDigit(value);
 
-const setOperationResult = (operation: string) => {
-  inputEl.focus();
+  if (shouldPreventWriting(key, value)) return;
 
-  if (!isOperation(operation)) return;
+  if (
+    hasText(value) ||
+    hasLeadingZero(value) ||
+    isMathSymbol(value[0]) ||
+    isDone
+  ) {
+    isDone = false;
+    return setInputValue(key);
+  }
 
-  const result = calculate(operation, 4);
+  if (!isInteger(lastDigit) && isMathSymbol(key)) {
+    return updateLastInputDigit(key);
+  }
 
-  setInputValue(result);
-};
+  if (key === CALCULATOR_KEYS.Backspace) return updateLastInputDigit("");
 
-const initApp = () => {
-  appEl.setAttribute("data-theme", String(state.theme));
-  formEl.addEventListener("submit", (event) => event.preventDefault());
+  if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
+    const result = calculate(value, 4);
+    isDone = true;
+    return setInputValue(result);
+  }
 
-  appEl.addEventListener("click", (ev) => {
-    const event = ev as PointerEvent;
-    const keyBtn = event.target as HTMLButtonElement;
+  return setInputValue(`${value}${key}`);
+});
 
-    const key = getKeyValue(keyBtn) || "";
-    const lastDigit = getLastInputDigit();
-    const inputVal = getInputValue();
-
-    if (
-      (!inputVal && isMathSymbol(key)) ||
-      shouldPreventNewComma(key, inputVal)
-    ) {
-      return;
-    }
-
-    if (hasText(inputVal) || hasLeadingZero(inputVal)) {
-      return setInputValue(key);
-    }
-
-    if (!isInteger(lastDigit) && isMathSymbol(key)) {
-      return updateLastInputDigit(key);
-    }
-
-    if (key === ALL_CALCULATOR_KEYS.Backspace) return updateLastInputDigit("");
-
-    if (key === ALL_CALCULATOR_KEYS.Enter) return setOperationResult(inputVal);
-
-    return setInputValue(`${inputVal}${key}`);
-  });
-
-  toggleBtnEl.addEventListener("click", () => {
-    state.theme += 1;
-    if (state.theme > 3) state.theme = 1;
-    appEl.setAttribute("data-theme", String(state.theme));
-    localStorage.setItem("CALCULATOR_THEME_KEY", String(state.theme));
-  });
-
-  formEl.addEventListener("keyup", (event) => {
-    const { key } = event;
-    const inputVal = getInputValue();
-    const lastDigit = getLastInputDigit();
-
-    if (hasText(inputVal) || hasLeadingZero(inputVal)) {
-      return setInputValue(key);
-    }
-
-    if (!isInteger(lastDigit) && isMathSymbol(key)) {
-      return updateLastInputDigit(key);
-    }
-  });
-
-  formEl.addEventListener("keydown", (event) => {
-    const { key } = event;
-    const inputVal = getInputValue();
-
-    if (
-      !(key in ALL_CALCULATOR_KEYS) ||
-      (!inputVal && isMathSymbol(key)) ||
-      shouldPreventNewComma(key, inputVal)
-    ) {
-      return event.preventDefault();
-    }
-
-    if (key === ALL_CALCULATOR_KEYS.Enter) setOperationResult(inputVal);
-  });
-};
-
-initApp();
+let currentTheme = Number(
+  localStorage.getItem("CALCULATOR_THEME") || THEMES[0]
+);
+appEl.setAttribute("data-theme", String(currentTheme));
+toggleBtnEl.addEventListener("click", () => {
+  currentTheme += 1;
+  if (currentTheme > 3) currentTheme = 1;
+  appEl.setAttribute("data-theme", String(currentTheme));
+  localStorage.setItem("CALCULATOR_THEME", String(currentTheme));
+});
