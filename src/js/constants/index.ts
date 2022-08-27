@@ -16,14 +16,15 @@ const SYMBOLS = {
   Susbtract: "-",
   Divide: "/",
   Multiply: "*",
+  Comma: ".",
 };
 
 const CALCULATOR_KEYS = {
   ...NUMBERS,
   ...SYMBOLS,
-  Comma: ".",
   Enter: "Enter",
   Backspace: "Backspace",
+  Reset: "Reset",
 };
 
 const THEMES = ["1", "2", "3"];
