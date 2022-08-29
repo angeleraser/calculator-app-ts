@@ -1,13 +1,14 @@
 import { CALCULATOR_KEYS, THEMES } from "./js/constants";
 import {
-  getKeyValue,
+  getKey,
   hasLeadingZero,
   isValidDigit,
-  endsWithComma,
   isMathSymbol,
-  endsWithMathSymbol,
   isInteger,
   shouldPreventCommaKey,
+  isOperation,
+  calculate,
+  getLastDigit,
 } from "./js/utils";
 import "./styles/index.css";
 
@@ -32,60 +33,52 @@ const setInputValue = (value: string) => {
 };
 
 formEl.addEventListener("click", (event) => {
-  const key = getKeyValue(event.target as HTMLButtonElement);
+  const key = getKey(event.target as HTMLButtonElement);
   const value = getInputValue();
 
-  if (key === CALCULATOR_KEYS.Backspace) return updateLastInputDigit("");
-
-  if (key === CALCULATOR_KEYS.Enter) return; // calculate()
-
-  if (key === CALCULATOR_KEYS.Reset) return; // resetOperation()
+  if ((!value && !isInteger(key)) || shouldPreventCommaKey(value, key)) {
+    return event.preventDefault();
+  }
 
   if (hasLeadingZero(value)) return setInputValue(key);
 
-  if (
-    isMathSymbol(key) &&
-    (endsWithComma(value) || endsWithMathSymbol(value))
-  ) {
+  if (isMathSymbol(key) && !isInteger(getLastDigit(value))) {
     return updateLastInputDigit(key);
   }
 
-  if (shouldPreventCommaKey(value, key)) return setInputValue(value);
+  if (key === CALCULATOR_KEYS.Reset) return setInputValue("");
 
-  return setInputValue(`${value}${key}`);
+  if (key === CALCULATOR_KEYS.Backspace) return updateLastInputDigit("");
+
+  if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
+    return setInputValue(calculate(value));
+  }
+
+  return isValidDigit(key) && setInputValue(`${value}${key}`);
 });
 
-formEl.addEventListener("keydown", (e) => {
-  const event = e;
+formEl.addEventListener("keydown", (event) => {
   const { key } = event;
   const value = getInputValue();
 
-  if (!value && !isInteger(key)) return event.preventDefault();
+  if (key === CALCULATOR_KEYS.Backspace) return;
 
-  if (key === CALCULATOR_KEYS.Backspace) return; // delete;
+  if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
+    return setInputValue(calculate(value));
+  }
 
-  if (key === CALCULATOR_KEYS.Enter) return; // calculate()
-
-  if (key === CALCULATOR_KEYS.Reset) return; // resetOperation()
-
-  if (!isValidDigit(key)) return event.preventDefault();
+  if (!isValidDigit(key) || shouldPreventCommaKey(value, key)) {
+    return event.preventDefault();
+  }
 
   if (hasLeadingZero(value)) {
     event.preventDefault();
     return setInputValue(key);
   }
 
-  if (
-    isMathSymbol(key) &&
-    (endsWithComma(value) || endsWithMathSymbol(value))
-  ) {
+  if (isMathSymbol(key) && !isInteger(getLastDigit(value))) {
     event.preventDefault();
     return updateLastInputDigit(key);
-  }
-
-  if (shouldPreventCommaKey(value, key)) {
-    event.preventDefault();
-    return setInputValue(value);
   }
 });
 

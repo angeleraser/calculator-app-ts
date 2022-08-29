@@ -122,25 +122,25 @@
   grid-column: span 2;
 }
 
-.keypad-button-normal {
+.keypad-button-primary {
+  background-color: var(--key-bg-3);
+  color: var(--text-color-1);
+  font-size: 32px;
+  box-shadow: 1px 3px 0 var(--key-shadow-3);
+}
+
+.keypad-button-secondary {
   background-color: var(--key-bg-1);
   box-shadow: 1px 3px 0 var(--key-shadow-1);
   font-size: 20px;
   color: var(--text-light);
 }
 
-.keypad-button-helpers {
+.keypad-button-helper {
   background-color: var(--key-bg-2);
   box-shadow: 1px 3px 0 var(--key-shadow-2);
   color: var(--text-light);
   font-size: 24px;
-}
-
-.keypad-button-equal {
-  background-color: var(--key-bg-3);
-  color: var(--text-color-1);
-  font-size: 32px;
-  box-shadow: 1px 3px 0 var(--key-shadow-3);
 }
 
 /* Theme 1 */
