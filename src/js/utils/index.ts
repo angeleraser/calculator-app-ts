@@ -1,7 +1,9 @@
 import { CALCULATOR_KEYS } from "../constants";
 
-const getKey = (buttonEl: HTMLButtonElement) => {
-  return buttonEl.dataset.key || "";
+const operationRegexp = /^([\d\-?]+(\.\d+)?([-+\/*]\d+(\.\d+)?)*)$/g;
+
+const getKey = (btnEl: HTMLButtonElement) => {
+  return btnEl.dataset.key || "";
 };
 
 const getLastDigit = (value: string | string[]) => {
@@ -17,13 +19,16 @@ const isInteger = (value: string) => {
   return Number.isInteger(Number(value));
 };
 
+const isInfinity = (value: string) => {
+  return !Number.isFinite(Number(value));
+};
+
 const isMathSymbol = (key: string) => {
   return !!key.match(/[-+/*]/);
 };
 
 const isValidDigit = (key: string) => {
-  const regexp = /[0-9\.\+\-\/\*]/;
-  return regexp.test(key);
+  return /[0-9\.\+\-\/\*]/.test(key);
 };
 
 const hasLeadingZero = (value: string) => {
@@ -35,7 +40,6 @@ const hasComma = (value: string) => {
 };
 
 const isOperation = (value: string) => {
-  const operationRegexp = /^([\d\-?]+(\.\d+)?([-+\/*]\d+(\.\d+)?)*)$/g;
   return !!value.match(operationRegexp) && getOperationTerms(value).length > 1;
 };
 
@@ -53,16 +57,22 @@ const shouldPreventCommaKey = (value: string, key: string) => {
   );
 };
 
+const hasValidInput = (value: string) => {
+  return !!value.match(operationRegexp);
+};
+
 export {
   calculate,
   getKey,
   getLastDigit,
+  getOperationTerms,
   hasComma,
   hasLeadingZero,
+  hasValidInput,
   isInteger,
   isMathSymbol,
   isOperation,
   isValidDigit,
-  getOperationTerms,
   shouldPreventCommaKey,
+  isInfinity,
 };

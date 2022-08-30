@@ -29,4 +29,6 @@ const CALCULATOR_KEYS = {
 
 const THEMES = ["1", "2", "3"];
 
-export { CALCULATOR_KEYS, NUMBERS, SYMBOLS, THEMES };
+const INVALID_INPUT = "Invalid input";
+
+export { CALCULATOR_KEYS, NUMBERS, SYMBOLS, THEMES, INVALID_INPUT };
