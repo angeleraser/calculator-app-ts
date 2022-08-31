@@ -104,9 +104,7 @@ const handleKeyPress = (event: PointerEvent | KeyboardEvent) => {
   const target = event.target as HTMLElement;
   const type = getEventType(event);
 
-  if (target.tagName === "BUTTON" || type === "keydown") {
-    playKeypressSound();
-  }
+  if (target.tagName === "BUTTON") playKeypressSound();
 
   if (key === CALCULATOR_KEYS.Reset || calculatorHasError()) {
     return resetCalculator();
@@ -151,8 +149,9 @@ const handleInputPaste = (event: Event) => {
 // Event Listeners
 formEl.addEventListener("click", (e) => handleKeyPress(e as PointerEvent));
 formEl.addEventListener("keydown", handleKeyPress);
-formEl.addEventListener("submit", (event) => event.preventDefault());
 inputEl.addEventListener("input", handleInputPaste);
+formEl.addEventListener("keyup", playKeypressSound);
+formEl.addEventListener("submit", (event) => event.preventDefault());
 
 toggleBtnEl.addEventListener("click", handleToggleTheme);
 appEl.setAttribute("data-theme", String(calculator.theme));
