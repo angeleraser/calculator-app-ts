@@ -36,9 +36,32 @@ const updateLastInputDigit = (value: string) => {
   setInputVal(`${val.substring(0, val.length - 1)}${value}`);
 };
 
+const deleteInputDigit = (caretPosition: number) => {
+  const val = getInputVal();
+
+  if (caretPosition === 0 || caretPosition === val.length) {
+    setInputCaretPosition(val.length);
+    return updateLastInputDigit("");
+  }
+
+  const index = caretPosition - 1;
+  const digits = val.split("");
+  delete digits[index];
+
+  setInputVal(digits.join(""));
+  setInputCaretPosition(index);
+};
+
 const getInputVal = () => inputEl.value || "";
 
+const getInputCaretPosition = () => inputEl.selectionEnd || 0;
+
 const setInputVal = (value: string) => (inputEl.value = value);
+
+const setInputCaretPosition = (index: number) => {
+  inputEl.focus();
+  inputEl.setSelectionRange(index, index);
+};
 
 // Calculator helpers
 const showInvalidInputMsg = () => {
@@ -98,7 +121,7 @@ const handleToggleTheme = () => {
   localStorage.setItem("CALCULATOR_THEME", String(calculator.theme));
 };
 
-const handleKeyPress = (event: PointerEvent | KeyboardEvent) => {
+const handleKeyPressEvent = (event: PointerEvent | KeyboardEvent) => {
   const key = getEventKey(event);
   const value = getInputVal();
   const target = event.target as HTMLElement;
@@ -114,7 +137,7 @@ const handleKeyPress = (event: PointerEvent | KeyboardEvent) => {
 
   if (key === CALCULATOR_KEYS.Backspace) {
     event.preventDefault();
-    return updateLastInputDigit("");
+    return deleteInputDigit(getInputCaretPosition());
   }
 
   if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
@@ -149,8 +172,8 @@ const handleInputPaste = (event: Event) => {
 };
 
 // Event Listeners
-formEl.addEventListener("click", (e) => handleKeyPress(e as PointerEvent));
-formEl.addEventListener("keydown", handleKeyPress);
+formEl.addEventListener("click", (e) => handleKeyPressEvent(e as PointerEvent));
+formEl.addEventListener("keydown", handleKeyPressEvent);
 inputEl.addEventListener("input", handleInputPaste);
 formEl.addEventListener("keyup", playKeypressSound);
 formEl.addEventListener("submit", (event) => event.preventDefault());
