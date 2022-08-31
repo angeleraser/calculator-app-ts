@@ -20,6 +20,9 @@ const toggleBtnEl = document.getElementById(
 const appEl = document.getElementById("app") as HTMLDivElement;
 const formEl = document.getElementById("calculator-form") as HTMLFormElement;
 const inputEl = document.getElementById("calculator-input") as HTMLInputElement;
+const keypressSound = document.getElementById(
+  "keypress-sound"
+) as HTMLAudioElement;
 
 const calculator = {
   theme: Number(localStorage.getItem("CALCULATOR_THEME") || THEMES[0]),
@@ -82,6 +85,11 @@ const shouldPreventCommaKey = (value: string, key: string) => {
   );
 };
 
+const playKeypressSound = () => {
+  keypressSound.currentTime = 0;
+  keypressSound.play();
+};
+
 // Event handlers
 const handleToggleTheme = () => {
   calculator.theme += 1;
@@ -93,12 +101,21 @@ const handleToggleTheme = () => {
 const handleKeyPress = (event: PointerEvent | KeyboardEvent) => {
   const key = getEventKey(event);
   const value = getInputVal();
+  const target = event.target as HTMLElement;
+  const type = getEventType(event);
+
+  if (target.tagName === "BUTTON" || type === "keydown") {
+    playKeypressSound();
+  }
 
   if (key === CALCULATOR_KEYS.Reset || calculatorHasError()) {
     return resetCalculator();
   }
 
-  if (key === CALCULATOR_KEYS.Backspace) return updateLastInputDigit("");
+  if (key === CALCULATOR_KEYS.Backspace) {
+    event.preventDefault();
+    return updateLastInputDigit("");
+  }
 
   if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
     return calculateOperation(value);
@@ -122,7 +139,7 @@ const handleKeyPress = (event: PointerEvent | KeyboardEvent) => {
     return updateLastInputDigit(key);
   }
 
-  if (getEventType(event) === "click") setInputVal(`${value}${key}`);
+  if (type === "click") setInputVal(`${value}${key}`);
 };
 
 const handleInputPaste = (event: Event) => {
