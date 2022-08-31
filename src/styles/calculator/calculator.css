@@ -4,11 +4,9 @@
 }
 
 .calculator-container {
-  max-height: 740px;
   max-width: 540px;
 }
 
-.calculator-container,
 .calculator-body {
   display: flex;
   flex-direction: column;
@@ -102,8 +100,8 @@
   flex-shrink: 0;
   gap: 24px;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(auto-fill, 60px);
-  padding: 24px 24px 0;
+  grid-template-rows: repeat(5, 60px);
+  padding: 24px;
 }
 
 .keypad-button {
@@ -181,4 +179,30 @@
 
 .app[data-theme="3"] .keypad-button-helpers {
   color: var(--text-color-1);
+}
+
+@media (max-width: 360px) {
+  .calculator-keypad {
+    height: auto;
+    grid-template-rows: repeat(5, 30px);
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .keypad-button-primary {
+    font-size: 16px;
+  }
+
+  .keypad-button-secondary {
+    font-size: 12px;
+  }
+
+  .calculator-screen {
+    height: 60px;
+  }
+
+  .calculator-screen input {
+    font-size: 18px;
+    padding: 20px 15px;
+  }
 }

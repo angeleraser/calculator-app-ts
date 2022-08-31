@@ -4,12 +4,20 @@
 @import url("./calculator/calculator.css");
 
 .app {
-  background-color: var(--main-bg);
-  font-family: var(--ff);
-  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
+  background-color: var(--main-bg);
+  display: flex;
+  font-family: var(--ff);
   height: 100%;
+  justify-content: center;
+  min-height: 720px;
+  min-width: 340px;
   padding: 24px;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .app {
+    min-height: 540px;
+  }
 }
