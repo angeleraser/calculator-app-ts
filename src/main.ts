@@ -1,16 +1,16 @@
 import { CALCULATOR_KEYS, INVALID_INPUT, THEMES } from "./js/constants";
 import {
-  getKey,
   hasLeadingZero,
   isValidDigit,
   isMathSymbol,
   isInteger,
-  shouldPreventCommaKey,
   isOperation,
   calculate,
   getLastDigit,
   hasValidInput,
   isInfinity,
+  getOperationTerms,
+  hasComma,
 } from "./js/utils";
 import "./styles/index.css";
 
@@ -27,19 +27,17 @@ const calculator = {
   hasInfinityResult: false,
 };
 
+// Input helpers
 const updateLastInputDigit = (value: string) => {
   const val = getInputVal();
   setInputVal(`${val.substring(0, val.length - 1)}${value}`);
 };
 
-const getInputVal = () => {
-  return inputEl.value || "";
-};
+const getInputVal = () => inputEl.value || "";
 
-const setInputVal = (value: string) => {
-  inputEl.value = value;
-};
+const setInputVal = (value: string) => (inputEl.value = value);
 
+// Calculator helpers
 const showInvalidInputMsg = () => {
   calculator.isInvalid = true;
   setInputVal(INVALID_INPUT);
@@ -61,6 +59,30 @@ const calculateOperation = (value: string) => {
   return setInputVal(result);
 };
 
+const getEventKey = (e: PointerEvent | KeyboardEvent) => {
+  const eventType = getEventType(e);
+
+  if (eventType === "click") {
+    return (e.target as HTMLButtonElement).dataset.key || "";
+  }
+
+  return (e as KeyboardEvent).key;
+};
+
+const getEventType = (event: PointerEvent | KeyboardEvent) => {
+  return event.type as "keydown" | "click";
+};
+
+const shouldPreventCommaKey = (value: string, key: string) => {
+  const lastDigit = getLastDigit(getOperationTerms(value));
+
+  return (
+    (hasComma(lastDigit) || isMathSymbol(getLastDigit(value))) &&
+    key === CALCULATOR_KEYS.Comma
+  );
+};
+
+// Event handlers
 const handleToggleTheme = () => {
   calculator.theme += 1;
   if (calculator.theme > 3) calculator.theme = 1;
@@ -68,22 +90,12 @@ const handleToggleTheme = () => {
   localStorage.setItem("CALCULATOR_THEME", String(calculator.theme));
 };
 
-formEl.addEventListener("click", (event) => {
-  const key = getKey(event.target as HTMLButtonElement);
+const handleKeyPress = (event: PointerEvent | KeyboardEvent) => {
+  const key = getEventKey(event);
   const value = getInputVal();
 
   if (key === CALCULATOR_KEYS.Reset || calculatorHasError()) {
     return resetCalculator();
-  }
-
-  if ((!value && !isInteger(key)) || shouldPreventCommaKey(value, key)) {
-    return event.preventDefault();
-  }
-
-  if (hasLeadingZero(value)) return setInputVal(key);
-
-  if (isMathSymbol(key) && !isInteger(getLastDigit(value))) {
-    return updateLastInputDigit(key);
   }
 
   if (key === CALCULATOR_KEYS.Backspace) return updateLastInputDigit("");
@@ -92,25 +104,11 @@ formEl.addEventListener("click", (event) => {
     return calculateOperation(value);
   }
 
-  return isValidDigit(key) && setInputVal(`${value}${key}`);
-});
-
-formEl.addEventListener("keydown", (event) => {
-  const { key } = event;
-  const value = getInputVal();
-
-  if (calculatorHasError()) {
-    event.preventDefault();
-    return resetCalculator();
-  }
-
-  if (key === CALCULATOR_KEYS.Backspace) return;
-
-  if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
-    return calculateOperation(value);
-  }
-
-  if (!isValidDigit(key) || shouldPreventCommaKey(value, key)) {
+  if (
+    (!value && !isInteger(key)) ||
+    shouldPreventCommaKey(value, key) ||
+    !isValidDigit(key)
+  ) {
     return event.preventDefault();
   }
 
@@ -124,15 +122,20 @@ formEl.addEventListener("keydown", (event) => {
     return updateLastInputDigit(key);
   }
 
-  if (calculator.isInvalid) return resetCalculator();
-});
+  if (getEventType(event) === "click") setInputVal(`${value}${key}`);
+};
 
-inputEl.addEventListener("input", (event) => {
+const handleInputPaste = (event: Event) => {
   const { inputType } = event as InputEvent;
   if (inputType !== "insertFromPaste") return;
   if (!hasValidInput(getInputVal())) showInvalidInputMsg();
-});
+};
 
-appEl.setAttribute("data-theme", String(calculator.theme));
+// Event Listeners
+formEl.addEventListener("click", (e) => handleKeyPress(e as PointerEvent));
+formEl.addEventListener("keydown", handleKeyPress);
 formEl.addEventListener("submit", (event) => event.preventDefault());
+inputEl.addEventListener("input", handleInputPaste);
+
 toggleBtnEl.addEventListener("click", handleToggleTheme);
+appEl.setAttribute("data-theme", String(calculator.theme));
