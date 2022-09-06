@@ -154,7 +154,7 @@ const handleKeyPressEvent = (event: PointerEvent | KeyboardEvent) => {
 
   if (hasLeadingZero(value)) {
     event.preventDefault();
-    return setInputVal(key);
+    return isInteger(key) && setInputVal(key);
   }
 
   if (isMathSymbol(key) && !isInteger(getLastDigit(value))) {
