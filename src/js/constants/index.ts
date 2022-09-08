@@ -21,6 +21,8 @@ const CALCULATOR_KEYS = {
 
 const THEMES = ["1", "2", "3"];
 
-const INVALID_INPUT = "Invalid input";
+const INVALID_INPUT_MSG = "Invalid input";
 
-export { CALCULATOR_KEYS, THEMES, INVALID_INPUT };
+const MATH_ERROR_MSG = "Error";
+
+export { CALCULATOR_KEYS, THEMES, INVALID_INPUT_MSG, MATH_ERROR_MSG };

@@ -1,16 +1,16 @@
-import { CALCULATOR_KEYS, INVALID_INPUT, THEMES } from "./js/constants";
 import {
-  hasLeadingZero,
+  CALCULATOR_KEYS,
+  INVALID_INPUT_MSG,
+  THEMES,
+  MATH_ERROR_MSG,
+} from "./js/constants";
+import {
   isValidDigit,
-  isMathSymbol,
   isInteger,
-  isOperation,
   calculate,
-  getLastDigit,
   hasValidInput,
   isInfinity,
-  getOperationTerms,
-  hasComma,
+  hasLeadingZero,
 } from "./js/utils";
 import "./styles/index.css";
 
@@ -66,7 +66,7 @@ const setInputCaretPosition = (index: number) => {
 // Calculator helpers
 const showInvalidInputMsg = () => {
   calculator.isInvalid = true;
-  setInputVal(INVALID_INPUT);
+  setInputVal(INVALID_INPUT_MSG);
 };
 
 const resetCalculator = () => {
@@ -79,9 +79,12 @@ const calculatorHasError = () => {
   return calculator.isInvalid || calculator.hasInfinityResult;
 };
 
-const calculateOperation = (value: string) => {
+const setOperationResult = (value: string) => {
   const result = calculate(value);
+
   calculator.hasInfinityResult = isInfinity(result);
+  calculator.isInvalid = result === MATH_ERROR_MSG;
+
   return setInputVal(result);
 };
 
@@ -97,15 +100,6 @@ const getEventKey = (e: PointerEvent | KeyboardEvent) => {
 
 const getEventType = (event: PointerEvent | KeyboardEvent) => {
   return event.type as "keydown" | "click";
-};
-
-const shouldPreventCommaKey = (value: string, key: string) => {
-  const lastDigit = getLastDigit(getOperationTerms(value));
-
-  return (
-    (hasComma(lastDigit) || isMathSymbol(getLastDigit(value))) &&
-    key === CALCULATOR_KEYS.Comma
-  );
 };
 
 const playKeypressSound = () => {
@@ -140,26 +134,15 @@ const handleKeyPressEvent = (event: PointerEvent | KeyboardEvent) => {
     return deleteInputDigit(getInputCaretPosition());
   }
 
-  if (key === CALCULATOR_KEYS.Enter && isOperation(value)) {
-    return calculateOperation(value);
-  }
+  if (key === CALCULATOR_KEYS.Enter) return setOperationResult(value);
 
-  if (
-    (!value && !isInteger(key)) ||
-    shouldPreventCommaKey(value, key) ||
-    !isValidDigit(key)
-  ) {
+  if ((!value && !isInteger(key)) || !isValidDigit(key)) {
     return event.preventDefault();
   }
 
   if (hasLeadingZero(value)) {
     event.preventDefault();
     return isInteger(key) && setInputVal(key);
-  }
-
-  if (isMathSymbol(key) && !isInteger(getLastDigit(value))) {
-    event.preventDefault();
-    return updateLastInputDigit(key);
   }
 
   if (type === "click") setInputVal(`${value}${key}`);
