@@ -222,6 +222,8 @@
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
-    <audio id="keypress-sound" src="/sounds/keypress.wav"></audio>
+    <audio crossorigin="anonymous" id="keypress-sound">
+      <source src="/src/sounds/keypress.wav" />
+    </audio>
   </body>
 </html>
