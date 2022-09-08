@@ -121,9 +121,11 @@ const handleKeyPressEvent = (event: PointerEvent | KeyboardEvent) => {
   const target = event.target as HTMLElement;
   const type = getEventType(event);
 
+  if (type === "click") inputEl.focus();
+
   if (type === "keydown" && key.includes("Arrow")) return;
 
-  if (target.tagName === "BUTTON") playKeypressSound();
+  if (target.tagName === "BUTTON" && type === "click") playKeypressSound();
 
   if (key === CALCULATOR_KEYS.Reset || calculatorHasError()) {
     return resetCalculator();
